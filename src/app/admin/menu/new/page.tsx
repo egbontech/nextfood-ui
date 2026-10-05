@@ -23,34 +23,33 @@ const categories = [
 ];
 
 export default function AddMenuItem() {
-  const [images, setImages] = useState<string[]>([]);
+  const [image, setImage] = useState<string | null>(null);
 
   const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
-    const files = Array.from(e.target.files || []);
+    const file = e.target.files?.[0];
 
-    if (!files.length) return;
+    if (!file) return;
 
-    const remainingSlots = 4 - images.length;
-    const selectedFiles = files.slice(0, remainingSlots);
+    const imageUrl = URL.createObjectURL(file);
 
-    const newImages = selectedFiles.map((file) =>
-      URL.createObjectURL(file),
-    );
-
-    setImages((prev) => [...prev, ...newImages]);
+    setImage(imageUrl);
 
     e.target.value = "";
   };
 
-  const removeImage = (index: number) => {
-    setImages((prev) => prev.filter((_, i) => i !== index));
+  const removeImage = () => {
+    if (image) {
+      URL.revokeObjectURL(image);
+    }
+
+    setImage(null);
   };
 
   const handleSubmit = (e: React.SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    if (images.length === 0) {
-      alert("Please upload at least one menu item image.");
+    if (!image) {
+      alert("Please upload a menu item image.");
       return;
     }
 
@@ -163,13 +162,9 @@ export default function AddMenuItem() {
               defaultValue="available"
               className="w-full rounded-lg border border-border bg-white px-4 py-3 text-sm outline-none transition focus:border-primary"
             >
-              <option value="available">
-                Available
-              </option>
+              <option value="available">Available</option>
 
-              <option value="unavailable">
-                Unavailable
-              </option>
+              <option value="unavailable">Unavailable</option>
             </select>
 
             <p className="mt-1.5 text-xs text-muted">
@@ -191,89 +186,62 @@ export default function AddMenuItem() {
             />
           </div>
 
-          {/* Menu Item Images */}
+          {/* Menu Item Image */}
           <div className="md:col-span-2">
-            <div className="mb-3 flex items-center justify-between">
-              <div>
-                <label className="block text-sm font-medium text-text">
-                  Menu Item Images
-                </label>
+            <div className="mb-3">
+              <label className="block text-sm font-medium text-text">
+                Menu Item Image
+              </label>
 
-                <p className="mt-1 text-xs text-muted">
-                  Upload 1–4 images. The first image will be the main
-                  menu item image.
-                </p>
-              </div>
-
-              <span className="text-xs font-medium text-muted">
-                {images.length}/4
-              </span>
+              <p className="mt-1 text-xs text-muted">
+                Upload one image for this menu item.
+              </p>
             </div>
 
-            {/* Image Previews */}
-            <div className="grid grid-cols-2 gap-4 sm:grid-cols-4">
-              {images.map((image, index) => (
-                <div
-                  key={image}
-                  className="group relative aspect-square overflow-hidden rounded-xl border border-border bg-background"
+            {image ? (
+              <div className="relative aspect-video w-full max-w-md overflow-hidden rounded-xl border border-border bg-background">
+                <Image
+                  src={image}
+                  alt="Menu item preview"
+                  fill
+                  className="object-cover"
+                />
+
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute right-3 top-3 flex h-9 w-9 cursor-pointer items-center justify-center rounded-full bg-white text-error shadow-sm transition hover:bg-error hover:text-white"
+                  aria-label="Remove image"
                 >
-                  <Image
-                    src={image}
-                    alt={`Menu item image ${index + 1}`}
-                    fill
-                    className="object-cover"
-                  />
+                  <FiTrash2 size={16} />
+                </button>
+              </div>
+            ) : (
+              <label className="flex aspect-video w-full max-w-md cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-background transition hover:border-primary hover:bg-[#FFF1E8]">
+                <FiUploadCloud size={32} className="text-primary" />
 
-                  {index === 0 && (
-                    <span className="absolute left-2 top-2 rounded-md bg-primary px-2 py-1 text-[10px] font-medium text-white">
-                      Main Image
-                    </span>
-                  )}
+                <span className="mt-2 text-sm font-medium text-text">
+                  Upload Image
+                </span>
 
-                  <button
-                    type="button"
-                    onClick={() => removeImage(index)}
-                    className="absolute right-2 top-2 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full bg-white text-error opacity-100 shadow-sm transition hover:bg-error hover:text-white"
-                    aria-label={`Remove image ${index + 1}`}
-                  >
-                    <FiTrash2 size={15} />
-                  </button>
-                </div>
-              ))}
+                <span className="mt-1 text-xs text-muted">
+                  PNG, JPG or WEBP
+                </span>
 
-              {/* Upload Button */}
-              {images.length < 4 && (
-                <label className="flex aspect-square cursor-pointer flex-col items-center justify-center rounded-xl border-2 border-dashed border-border bg-background transition hover:border-primary hover:bg-[#FFF1E8]">
-                  <FiUploadCloud
-                    size={30}
-                    className="text-primary"
-                  />
+                <input
+                  type="file"
+                  accept="image/png,image/jpeg,image/webp"
+                  onChange={handleImageChange}
+                  className="hidden"
+                />
+              </label>
+            )}
 
-                  <span className="mt-2 text-xs font-medium text-text">
-                    Add Image
-                  </span>
-
-                  <span className="mt-1 text-[10px] text-muted">
-                    {4 - images.length} slot
-                    {4 - images.length !== 1 ? "s" : ""} left
-                  </span>
-
-                  <input
-                    type="file"
-                    accept="image/png,image/jpeg,image/webp"
-                    multiple
-                    onChange={handleImageChange}
-                    className="hidden"
-                  />
-                </label>
-              )}
-            </div>
-
-            {images.length === 0 && (
+            {!image && (
               <div className="mt-4 flex items-center gap-2 text-xs text-muted">
                 <FiImage size={15} />
 
-                <span>At least one image is required.</span>
+                <span>One image is required.</span>
               </div>
             )}
           </div>
@@ -292,4 +260,3 @@ export default function AddMenuItem() {
     </div>
   );
 }
-

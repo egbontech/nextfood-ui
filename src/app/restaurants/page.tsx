@@ -4,7 +4,7 @@ import Link from "next/link";
 import {
   FiClock,
   FiMapPin,
-  FiSearch,
+ 
   FiStar,
 } from "react-icons/fi";
 

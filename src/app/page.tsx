@@ -1,6 +1,6 @@
 import Banner from "@/components/home/Banner";
 import Categories from "@/components/home/CategorySection";
-import Footer from "@/components/home/Footer";
+
 import TopDishes from "@/components/home/TopDishes";
 import FrontendLayout from "@/components/layouts/FrontendLayout";
 

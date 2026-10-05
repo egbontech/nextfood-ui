@@ -27,32 +27,7 @@ const dish = {
   deliveryFee: "$2.49",
 };
 
-const relatedDishes = [
-  {
-    name: "Vegetable Pasta",
-    price: 10.99,
-    image: "/images/vegetable-pasta.jpg",
-    category: "Pasta",
-    rating: 4.6,
-    slug: "vegetable-pasta",
-  },
-  {
-    name: "Chicken Noodles",
-    price: 11.99,
-    image: "/images/noodles.jpg",
-    category: "Noodles",
-    rating: 4.7,
-    slug: "chicken-noodles",
-  },
-  {
-    name: "Margherita Pizza",
-    price: 14.99,
-    image: "/images/pizza.jpg",
-    category: "Pizza",
-    rating: 4.8,
-    slug: "margherita-pizza",
-  },
-];
+
 
 export default function DishPage() {
   return (

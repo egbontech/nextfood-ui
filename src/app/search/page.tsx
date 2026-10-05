@@ -26,7 +26,7 @@ export default function SearchPage() {
           <p className="text-sm font-medium text-primary">Search results</p>
 
           <h1 className="mt-2 text-3xl font-bold tracking-tight text-text sm:text-4xl">
-            Results for "{searchQuery}"
+            Results for &quot;{searchQuery}&quot;
           </h1>
 
           <p className="mt-2 text-sm text-muted sm:text-base">
@@ -43,7 +43,7 @@ export default function SearchPage() {
               </p>
 
               <h2 className="mt-1 text-2xl font-bold text-text sm:text-3xl">
-                Food you'll love
+                Food you&apos;ll love
               </h2>
             </div>
           </div>

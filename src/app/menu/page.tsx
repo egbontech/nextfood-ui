@@ -1,6 +1,6 @@
 import FrontendLayout from "@/components/layouts/FrontendLayout";
 import Image from "next/image";
-import { FiPlus, FiSearch, FiStar } from "react-icons/fi";
+import { FiPlus,  FiStar } from "react-icons/fi";
 
 const categories = [
   "All",
